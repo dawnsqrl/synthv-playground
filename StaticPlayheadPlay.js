@@ -37,14 +37,13 @@ function getBlickFromPlayhead() {
 }
 
 function shiftView(coordinateSystem) {
-  var tempo = SV.getProject().getTimeAxis().getTempoMarkAt(getBlickFromPlayhead()).bpm;
   var viewRange = coordinateSystem.getTimeViewRange();
   var updatedPlayheadPercentage = (getBlickFromPlayhead() - viewRange[0]) / (viewRange[1] - viewRange[0]);
   coordinateSystem.setTimeLeft(viewRange[0] + (viewRange[1] - viewRange[0]) * (updatedPlayheadPercentage - playheadPercentage));
-  if (SV.getPlayback().getStatus() == "stopped") SV.finish();
 }
 
 function cycleTimeout() {
+  if (SV.getPlayback().getStatus() == "stopped") SV.finish();
   shiftView(SV.getMainEditor().getNavigation());
   shiftView(SV.getArrangement().getNavigation());
   SV.setTimeout(updateInterval, cycleTimeout);
