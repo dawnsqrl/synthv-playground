@@ -1,6 +1,6 @@
 var scriptTitle = "Play with Fixed Playhead Position";
 var creditTitle = " – by dawnsqrl";
-var hintMessage = "Before execution, please move the playhead to the desired position in the leftmost screen of piano roll.";
+var hintMessage = "Before execution, please move playhead to the desired position in the leftmost screen of piano roll.";
 var updateIntervalTitle = "View update interval"
 var updateIntervalFormat = "%.0f ms"
 var restartPlayTitle = "Play from beginning"
