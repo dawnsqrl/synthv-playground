@@ -1,6 +1,6 @@
 # Synthesizer V utility script releases
 
-以下JavaScript脚本均包含英文、中文及[抽象中文](https://github.com/dawnsqrl/synthv-abstract)本地化翻译。
+所有JavaScript脚本均包含英文、中文及[抽象中文](https://github.com/dawnsqrl/synthv-abstract)本地化翻译。
 
 | 文件名 | 功能 |
 | - | - |

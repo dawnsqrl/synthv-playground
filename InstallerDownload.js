@@ -35,7 +35,7 @@ function getTranslations(langCode) {
         ]);
     }
     if (langCode == "zh-abs") {
-        return [
+        return translation.concat([
             [hintMessageConfirm, "点 \"" + SV.T("OK") + "\" 确认"],
             [hintMessageConfirmReturn, "点 \"" + SV.T("Yes") + "\" 确认，点 \"" + SV.T("No") + "\" 返回"],
             [selectionSummary, "已选："],
@@ -44,7 +44,7 @@ function getTranslations(langCode) {
             [versionSelectorTitle, "版本"],
             [finishTitle, "链接已复制"],
             [finishMessage, "粘贴至浏览器下载"]
-        ];
+        ]);
     }
     return [];
 }
