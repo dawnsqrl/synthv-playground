@@ -1,57 +1,67 @@
-var scriptTitle = "Play with Fixed Playhead Position";
-var creditTitle = " – by dawnsqrl";
-var hintMessage = "Before execution, please move playhead to the desired position in the leftmost screen of piano roll.";
+var scriptTitle = "Play with Fixed Playhead Position"
+var creditTitle = "dawnsqrl"
+var hintMessage = "Before execution, please move playhead to the desired position in the leftmost screen of piano roll."
 var updateIntervalTitle = "View update interval"
 var updateIntervalFormat = "%.0f ms"
 var restartPlayTitle = "Play from beginning"
-var updateInterval;
-var playheadPercentage;
+var updateInterval
+var playheadPercentage
 
 function getTranslations(langCode) {
+  var translation = [
+    [scriptTitle, "播放并固定相对播放位置"],
+    [creditTitle, "凌雾松鼠"]
+  ]
   if (langCode == "zh-cn") {
-    return [
-      [scriptTitle, "播放并固定相对播放位置"],
-      [creditTitle, " by 凌雾松鼠"],
+    return translation.concat([
       [hintMessage, "执行前，请将起始播放位置移至钢琴卷帘最左侧屏范围内。"],
       [updateIntervalTitle, "视图更新周期"],
       [updateIntervalFormat, "%.0f毫秒"],
       [restartPlayTitle, "从头开始播放"]
-    ];
+    ])
   }
-  return [];
+  if (langCode == "zh-abs") {
+    return translation.concat([
+      [hintMessage, "先把播放位置移到开头"],
+      [updateIntervalTitle, "流畅度"],
+      [updateIntervalFormat, "%.0f毫秒"],
+      [restartPlayTitle, "从头开始"]
+    ])
+  }
+  return []
 }
 
 function getClientInfo() {
   return {
     "name": SV.T(scriptTitle),
-    "author": "dawnsqrl",
-    "versionNumber": 0,
+    "author": SV.T(creditTitle),
+    "versionNumber": 1,
     "minEditorVersion": 65537
-  };
+  }
 }
 
 function getBlickFromPlayhead() {
-  var playheadTime = SV.getPlayback().getPlayhead();
-  var timeAxis = SV.getProject().getTimeAxis();
-  return timeAxis.getBlickFromSeconds(playheadTime);
+  var playheadTime = SV.getPlayback().getPlayhead()
+  var timeAxis = SV.getProject().getTimeAxis()
+  return timeAxis.getBlickFromSeconds(playheadTime)
 }
 
 function shiftView(coordinateSystem) {
-  var viewRange = coordinateSystem.getTimeViewRange();
-  var updatedPlayheadPercentage = (getBlickFromPlayhead() - viewRange[0]) / (viewRange[1] - viewRange[0]);
-  coordinateSystem.setTimeLeft(viewRange[0] + (viewRange[1] - viewRange[0]) * (updatedPlayheadPercentage - playheadPercentage));
+  var viewRange = coordinateSystem.getTimeViewRange()
+  var updatedPlayheadPercentage = (getBlickFromPlayhead() - viewRange[0]) / (viewRange[1] - viewRange[0])
+  coordinateSystem.setTimeLeft(viewRange[0] + (viewRange[1] - viewRange[0]) * (updatedPlayheadPercentage - playheadPercentage))
 }
 
 function cycleTimeout() {
-  if (SV.getPlayback().getStatus() == "stopped") SV.finish();
-  shiftView(SV.getMainEditor().getNavigation());
-  shiftView(SV.getArrangement().getNavigation());
-  SV.setTimeout(updateInterval, cycleTimeout);
+  if (SV.getPlayback().getStatus() == "stopped") SV.finish()
+  shiftView(SV.getMainEditor().getNavigation())
+  shiftView(SV.getArrangement().getNavigation())
+  SV.setTimeout(updateInterval, cycleTimeout)
 }
 
 function main() {
   var dialog = {
-    "title": SV.T(scriptTitle) + SV.T(creditTitle),
+    "title": SV.T(scriptTitle) + " by " + SV.T(creditTitle),
     "message": SV.T(hintMessage),
     "buttons": "OkCancel",
     "widgets": [
@@ -70,19 +80,19 @@ function main() {
         "type": "CheckBox",
         "text": SV.T(restartPlayTitle),
         "default": false
-      },
+      }
     ]
-  };
-  var response = SV.showCustomDialog(dialog);
-  var viewRange = SV.getMainEditor().getNavigation().getTimeViewRange();
-  var playback = SV.getPlayback();
+  }
+  var response = SV.showCustomDialog(dialog)
+  var viewRange = SV.getMainEditor().getNavigation().getTimeViewRange()
+  var playback = SV.getPlayback()
   if (response.status) {
-    playheadPercentage = (getBlickFromPlayhead() - viewRange[0]) / (viewRange[1] - viewRange[0]);
-    updateInterval = response.answers.update_interval;
-    playback.play();
+    playheadPercentage = (getBlickFromPlayhead() - viewRange[0]) / (viewRange[1] - viewRange[0])
+    updateInterval = response.answers.update_interval
+    playback.play()
     if (response.answers.restart_play) {
-      SV.setTimeout(playback.getPlayhead() * 1000, cycleTimeout);
-      playback.seek(0);
-    } else cycleTimeout();
-  } else SV.finish();
+      SV.setTimeout(playback.getPlayhead() * 1000, cycleTimeout)
+      playback.seek(0)
+    } else cycleTimeout()
+  } else SV.finish()
 }
